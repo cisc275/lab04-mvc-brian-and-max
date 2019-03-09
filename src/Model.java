@@ -3,108 +3,103 @@
  * Does not contain anything about images or graphics, must ask view for that
  *
  * has methods to
- *  detect collision with boundaries
+ * detect collision with boundaries
  * decide next direction
  * provide direction
  * provide location
  **/
 
-import javax.swing.JPanel;
-
-@SuppressWarnings("serial")
-public class Model extends JPanel{
-
-	private int xloc = 0;
-    private int yloc = 0;
+public class Model {
+	private int frameWidth;
+    private int frameHeight;
+    private int imgWidth;
+    private int imgHeight;
     private int xM = 1;
     private int yM = 1;
+    private int xloc = 0;
+    private int yloc = 0;
     private final int xIncr = 8;
     private final int yIncr = 2;
     
-    private int picIndex = 0;
+    final private int NE = 3;
+    final private int NW = 4;
+    final private int SE = 0;
+    final private int SW = 6;
     
-    private int fWidth;
-    private int fHeight;
-    private int aImgWidth;
-    private int aImgHeight;
+    private int direction;
     
-    final static int NORTHEAST = 3;
-    final static int NORTHWEST = 4;
-    final static int SOUTHEAST = 0;
-    final static int SOUTHWEST = 6;
-    
-    public Model(int fWidth, int fHeight, int aImgWidth, int aImgHeight) {
-    	this.fWidth = fWidth;
-    	this.fHeight = fHeight;
-    	this.aImgWidth = aImgWidth;
-    	this.aImgHeight = aImgHeight;
+    public Model(int w, int h, int iw, int ih) {
+    	this.frameWidth = w;
+    	this.frameHeight = h;
+    	this.imgWidth = iw;
+    	this.imgHeight = ih;
     }
-	
-	public void updateLocationAndDirection() {
-		xloc += (xIncr*xM);
-		yloc += (yIncr*yM);
-		
-		//Be sure that animation picture direction matches what is happening on screen.
-    	if (xloc + aImgWidth >= fWidth) {
+    
+    public int getX() {
+		return xloc;
+	}
+    
+    public int getY() {
+		return yloc;
+	}
+    
+    public int getXIncr() {
+    	return xIncr;
+    }
+    
+    public int getYIncr() {
+    	return yIncr;
+    }
+    
+    public int getXM() {
+    	return xM;
+    }
+    
+    public int getYM() {
+    	return yM;
+    }
+    
+    public int getDirect() {
+    	return direction;
+    }
+    
+    public void setX(int x) {
+    	xloc = x;
+    }
+    
+    public void setY(int y) {
+    	yloc = y;
+    }
+    
+    public void updateLocationAndDirection() {
+    	xloc+=(xIncr*xM);
+    	yloc+=(yIncr*yM);
+    	
+    	if (xloc + imgWidth >= frameWidth) {
 			xM = -1;
-			
-		} else if (xloc + (fHeight / 10) <= 0) {
+		} else if (xloc + (frameHeight / 10) <= 0) {
 			xM = 1;
 		}
     	
-    	if (yloc + aImgHeight >= fHeight) {
+    	if (yloc + imgHeight >= frameHeight) {
 			yM = -1;
-		} else if (yloc + (fHeight / 10) <= 0) {
+		} else if (yloc + (frameHeight / 10) <= 0) {
 			yM = 1;
 		}
-	}
-	
-	public int getX() {
-		return this.xloc;
-	}
-	
-	public int getY() {
-		return this.yloc;
-	}
-	
-	public int getDirect() {
-		if (xM == 1 && yM == 1) {
-    		picIndex = SOUTHEAST;
-    	}
-    	if (xM == -1 && yM == -1) {
-    		picIndex = NORTHWEST;
-    	}
-    	if (xM == 1 && yM == -1) {
-    		picIndex = NORTHEAST;
-    	}
-    	if (xM == -1 && yM == 1) {
-    		picIndex = SOUTHWEST;
+    	
+    	if (xM == 1 && yM == 1) {
+    		direction = SE;
     	}
     	
-    	return this.picIndex;
-	}
-	
-	public int getXIncr() {
-		return this.xIncr;
-	}
-	
-	public int getYIncr() {
-		return this.yIncr;
-	}
-	
-	public int getXM() {
-		return this.xM;
-	}
-	
-	public int getYM() {
-		return this.yM;
-	}
-	
-	public void setXLocation(int x) {
-		xloc = x;
-	}
-	
-	public void setYLocation(int y) {
-		yloc = y;
-	}
+    	if (xM == -1 && yM == -1) {
+    		direction = NW;
+    	}
+    	if (xM == 1 && yM == -1) {
+    		direction = NE;
+    	}
+    	
+    	if (xM == -1 && yM == 1){
+    		direction = SW;
+    	}
+    }
 }

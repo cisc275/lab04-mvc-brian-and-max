@@ -17,9 +17,9 @@ import javax.swing.JPanel;
  * use proper images for direction
  * load images for all direction (an image should only be loaded once!!! why?)
  **/
+
 @SuppressWarnings("serial")
 public class View extends JPanel {
-	JFrame frame = new JFrame();
 	
 	private int frameWidth = 500;
     private int frameHeight = 300;
@@ -35,8 +35,6 @@ public class View extends JPanel {
     
     private int x;
     private int y;
-    private int xM;
-    private int yM;
     private int dir;
     
     public int getWidth() {
@@ -64,22 +62,22 @@ public class View extends JPanel {
     }
     
     public View() {
+    	
+    	JFrame frame = new JFrame();
     	frame.getContentPane().add(this);
     	frame.setBackground(Color.gray);
     	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	frame.setSize(frameWidth, frameHeight);
     	frame.setVisible(true);
-    	
+
     	animations = new BufferedImage[directionCount][frameCount];
     	BufferedImage[] indexArray = new BufferedImage[directionCount];
-    	indexArray[0] = createImage("src/orc_animation/orc_forward_southeast.png");
-    	indexArray[1] = createImage("src/orc_animation/orc_forward_east.png");
-    	indexArray[2] = createImage("src/orc_animation/orc_forward_north.png");
-    	indexArray[3] = createImage("src/orc_animation/orc_forward_northeast.png");
-    	indexArray[4] = createImage("src/orc_animation/orc_forward_northwest.png");
-    	indexArray[5] = createImage("src/orc_animation/orc_forward_south.png");
-    	indexArray[6] = createImage("src/orc_animation/orc_forward_southwest.png");
-    	indexArray[7] = createImage("src/orc_animation/orc_forward_west.png");
+    	
+    	String[] directionArray = {"southeast", "east", "north", "northeast", "northwest", "south", "southwest", "west"};
+ 
+    	for (int i = 0; i < directionArray.length; i++) {
+    		indexArray[i] = createImage("src/orc_animation/orc_forward_" + directionArray[i] + ".png");
+    	}
     	
     	for (int i = 0; i < directionCount; i++) {
     		for (int j = 0; j < frameCount; j++) {
@@ -106,19 +104,21 @@ public class View extends JPanel {
     }
     
     public void update(int x, int y, int d) {
+    	this.x = x;
+    	this.y = y;
+    	this.dir = d;
+    	
     	try {
-	    	this.x = x;
-	    	this.y = y;
-	    	this.dir = d;
+    		this.setBackground(Color.gray);
 	    	this.repaint();
-	    	frame.getContentPane().add(this);
-	    	frame.setBackground(Color.gray);
-	    	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    	frame.setSize(frameWidth, frameHeight);
-	    	frame.setVisible(true);
 	    	Thread.sleep(100);
     	} catch (Exception e) {
 			e.printStackTrace();
 		}
     }
+    
+    public static void main(String[] args) {
+		Controller controller = new Controller();
+		controller.start();
+	}
 }
